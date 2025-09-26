@@ -1,13 +1,13 @@
 class Appointment {
-    String appointmentId;
-    String userId;
-    int doctorId;
-    DateTime appointmentDate;
-    String status;
-    String purpose;
-    String location;
-    String notes;
-    bool reminder;
+  String appointmentId;
+  String userId;
+  int doctorId;
+  DateTime appointmentDate;
+  String status;
+  String purpose;
+  String location;
+  String notes;
+  bool reminder;
 
   Appointment({
     required this.appointmentId,
@@ -47,5 +47,25 @@ class Appointment {
       notes: json['notes'],
       reminder: json['reminder'],
     );
+  }
+
+  // Method to schedule the appointment
+  void scheduleAppointment() {
+    status = "Scheduled";
+  }
+
+  // Method to set reminder
+  void setReminder(bool enabled) {
+    reminder = enabled;
+  }
+
+  // Method to get appointment details
+  String getAppointmentDetails() {
+    return "Appointment: $purpose with Doctor ID $doctorId on ${appointmentDate.toString()} at $location";
+  }
+
+  // Method to cancel appointment
+  void cancelAppointment() {
+    status = "Cancelled";
   }
 }

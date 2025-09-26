@@ -1,3 +1,5 @@
+import '../utils/logger.dart';
+
 class TestResults {
   int id;
   String testName;
@@ -11,6 +13,14 @@ class TestResults {
     required this.date,
   });
 
+  // ---------------- UML Methods ----------------
+
+  void updateResult(String newResult) {
+    resultValue = newResult;
+    date = DateTime.now();
+    AppLogger.info("🧪 Test result for $testName updated to $resultValue on $date");
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -19,6 +29,7 @@ class TestResults {
       'date': date.toIso8601String(),
     };
   }
+
   factory TestResults.fromJson(Map<String, dynamic> json) {
     return TestResults(
       id: json['id'],

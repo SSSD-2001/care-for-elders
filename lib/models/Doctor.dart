@@ -1,9 +1,11 @@
+import '../utils/logger.dart';
+
 class Doctor {
-    int doctorId;
-    String name;
-    String speciality;
-    String contactInfo;
-    String hospital;
+  int doctorId;
+  String name;
+  String speciality;
+  String contactInfo;
+  String hospital;
 
   Doctor({
     required this.doctorId,
@@ -30,6 +32,19 @@ class Doctor {
       speciality: json['speciality'],
       contactInfo: json['contactInfo'],
       hospital: json['hospital'],
+    );
+  }
+
+  // Method to get doctor details
+  String getDoctorDetails() {
+    return "Dr. $name - $speciality at $hospital. Contact: $contactInfo";
+  }
+
+  // Method to schedule appointment
+  void scheduleAppointment(DateTime appointmentDate) {
+    // Logic for scheduling appointment would go here
+    AppLogger.info(
+      "Appointment scheduled with Dr. $name for ${appointmentDate.toString()}",
     );
   }
 }
