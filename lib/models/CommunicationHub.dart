@@ -16,11 +16,11 @@ class CommunicationHub {
   void sendMessage(int toUserId, String content) {
     String msg = "To User $toUserId: $content";
     messages.add(msg);
-    AppLogger.info("📩 Message sent: $msg");
+    AppLogger.info("Message sent: $msg");
   }
 
   List<String> getMessages() {
-    AppLogger.info("📜 Messages for User $userId:");
+    AppLogger.info("Messages for User $userId:");
     return messages;
   }
 

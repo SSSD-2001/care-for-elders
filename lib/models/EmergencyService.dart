@@ -18,11 +18,11 @@ class EmergencyService {
   // ---------------- UML Methods ----------------
 
   void callEmergencyService() {
-    AppLogger.info("📞 Calling $name ($dserviceType) at $phoneNumber...");
+    AppLogger.info(" Calling $name ($dserviceType) at $phoneNumber...");
   }
 
   void getDirections() {
-    AppLogger.info("🗺️ Directions requested to $name at $address.");
+    AppLogger.info(" Directions requested to $name at $address.");
   }
 
   // Convert object to a Map (like JSON)
