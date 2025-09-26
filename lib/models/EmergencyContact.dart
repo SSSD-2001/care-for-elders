@@ -23,11 +23,11 @@ class Emergencycontact {
 
   void notifyEmergency() {
     isNotified = true;
-    AppLogger.info("🚨 Emergency! Notifying $name at $phoneNumber");
+    AppLogger.info("Emergency! Notifying $name at $phoneNumber");
   }
 
   String getContactInfo() {
-    return "👤 $name ($relationship), 📞 $phoneNumber, Priority: $priority";
+    return "$name ($relationship), $phoneNumber, Priority: $priority";
   }
 
   Map<String, dynamic> toJson() {

@@ -15,11 +15,11 @@ class MedicationReminder {
 
   void setReminder(DateTime reminderTime) {
     date = reminderTime;
-    AppLogger.info("🔔 Reminder set for prescription $prescriptionId at $date");
+    AppLogger.info("Reminder set for prescription $prescriptionId at $date");
   }
 
   void cancelReminder() {
-    AppLogger.info("❌ Reminder for prescription $prescriptionId has been cancelled.");
+    AppLogger.info("Reminder for prescription $prescriptionId has been cancelled.");
   }
 
   Map<String, dynamic> toJson() {

@@ -35,10 +35,10 @@ class User {
     if (email.isNotEmpty && password.length >= 4) {
       this.email = email;
       this.password = password;
-      AppLogger.info("✅ User registered with email: $email");
+      AppLogger.info("User registered with email: $email");
       return true;
     }
-    AppLogger.info("❌ Registration failed: invalid input");
+    AppLogger.info("Registration failed: invalid input");
     return false;
   }
 
@@ -51,19 +51,19 @@ class User {
   void updateProfile(String newName, String newEmail) {
     name = newName;
     email = newEmail;
-    AppLogger.info("🔄 Profile updated: $name, $email");
+    AppLogger.info("Profile updated: $name, $email");
   }
 
   // Share health data (mock implementation)
   void shareHealthData(int withUserId) {
-    AppLogger.info("📤 Health data shared with user ID: $withUserId");
+    AppLogger.info("Health data shared with user ID: $withUserId");
   }
 
   // Trigger SOS (mock implementation)
   void triggerSOS() {
-    AppLogger.info("🚨 SOS Triggered! Notifying emergency contacts...");
+    AppLogger.info("SOS Triggered! Notifying emergency contacts...");
     for (var contact in emergencyContacts) {
-      AppLogger.info("   📞 Notifying $contact");
+      AppLogger.info(" Notifying $contact");
     }
   }
 

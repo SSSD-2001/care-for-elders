@@ -18,7 +18,7 @@ class VitalSign {
   void updateValue(String newValue) {
     value = newValue;
     date = DateTime.now(); // update timestamp whenever value changes
-    AppLogger.info("🩺 Vital sign '$type' updated to $value at $date");
+    AppLogger.info(" Vital sign '$type' updated to $value at $date");
   }
 
   Map<String, dynamic> toJson() {

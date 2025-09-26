@@ -18,7 +18,7 @@ class TestResults {
   void updateResult(String newResult) {
     resultValue = newResult;
     date = DateTime.now();
-    AppLogger.info("🧪 Test result for $testName updated to $resultValue on $date");
+    AppLogger.info("Test result for $testName updated to $resultValue on $date");
   }
 
   Map<String, dynamic> toJson() {

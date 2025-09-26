@@ -41,17 +41,17 @@ class HealthTracking {
   }
 
   String getHealthProgress() {
-    return "📊 Health Tracker [$trackerId] progress: $value $unit";
+    return "Health Tracker [$trackerId] progress: $value $unit";
   }
 
   void viewHistory() {
-    AppLogger.info("📜 Health History for $trackerId:");
+    AppLogger.info("Health History for $trackerId:");
     AppLogger.info("   Vital Signs: ${vitalSigns.join(", ")}");
     AppLogger.info("   Activities: ${activityLog.join(", ")}");
   }
 
   void generateReport() {
-    AppLogger.info("📝 Generating health report for user $userId...");
+    AppLogger.info("Generating health report for user $userId...");
     AppLogger.info(getHealthProgress());
     viewHistory();
   }

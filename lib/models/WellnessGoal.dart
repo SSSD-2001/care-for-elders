@@ -20,12 +20,12 @@ class WellnessGoal {
     goalDescription = newGoalDescription;
     targetValue = newTargetValue;
     progress = "0%"; // reset progress
-    AppLogger.info("🎯 Goal set: $goalDescription, Target: $targetValue");
+    AppLogger.info("Goal set: $goalDescription, Target: $targetValue");
   }
 
   void updateProgress(String newProgress) {
     progress = newProgress;
-    AppLogger.info("📊 Progress updated: $progress for goal '$goalDescription'");
+    AppLogger.info("Progress updated: $progress for goal '$goalDescription'");
   }
 
   Map<String, dynamic> toJson() {

@@ -29,12 +29,12 @@ class MedicalRecord {
 
   void addPrescription(String prescription) {
     perscriptions.add(prescription);
-    AppLogger.info("✅ Prescription added: $prescription");
+    AppLogger.info("Prescription added: $prescription");
   }
 
   void addTestResult(String testResult) {
     testResults.add(testResult);
-    AppLogger.info("🧪 Test result added: $testResult");
+    AppLogger.info("Test result added: $testResult");
   }
 
   void addDiagnosis(String diag) {
@@ -55,7 +55,7 @@ class MedicalRecord {
     perscriptions.clear();
     testResults.clear();
     diagnosis.clear();
-    AppLogger.info("🗑️ All medical record details deleted.");
+    AppLogger.info("All medical record details deleted.");
   }
 
   Map<String, dynamic> toJson() {
