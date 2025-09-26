@@ -1,3 +1,5 @@
+import '../utils/logger.dart';
+
 class MedicalRecord {
   int recordId;
   int userId;
@@ -22,6 +24,39 @@ class MedicalRecord {
     required this.category,
     required this.diagnosis,
   });
+
+  // ---------------- UML Methods ----------------
+
+  void addPrescription(String prescription) {
+    perscriptions.add(prescription);
+    AppLogger.info("✅ Prescription added: $prescription");
+  }
+
+  void addTestResult(String testResult) {
+    testResults.add(testResult);
+    AppLogger.info("🧪 Test result added: $testResult");
+  }
+
+  void addDiagnosis(String diag) {
+    diagnosis.add(diag);
+    AppLogger.info("🩺 Diagnosis added: $diag");
+  }
+
+  List<String> getMedicalRecords() {
+    // returns a summary (for now just titles of lists)
+    return [
+      "Prescriptions: ${perscriptions.join(", ")}",
+      "Test Results: ${testResults.join(", ")}",
+      "Diagnosis: ${diagnosis.join(", ")}",
+    ];
+  }
+
+  void deleteRecord() {
+    perscriptions.clear();
+    testResults.clear();
+    diagnosis.clear();
+    AppLogger.info("🗑️ All medical record details deleted.");
+  }
 
   Map<String, dynamic> toJson() {
     return {

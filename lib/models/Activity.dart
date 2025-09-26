@@ -1,17 +1,17 @@
 class Activity {
-    int id;
-    String type;
-    int duration;
-    DateTime date;
+  int id;
+  String type;
+  int duration;
+  DateTime date;
 
-    Activity({
-      required this.id,
-      required this.type,
-      required this.duration,
-      required this.date,
-    });
+  Activity({
+    required this.id,
+    required this.type,
+    required this.duration,
+    required this.date,
+  });
 
-    Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'type': type,
@@ -19,6 +19,7 @@ class Activity {
       'date': date.toIso8601String(),
     };
   }
+
   factory Activity.fromJson(Map<String, dynamic> json) {
     return Activity(
       id: json['id'],
@@ -26,5 +27,10 @@ class Activity {
       duration: json['duration'],
       date: DateTime.parse(json['date']),
     );
+  }
+
+  // Method to update activity duration
+  void updateDuration(int newDuration) {
+    duration = newDuration;
   }
 }
