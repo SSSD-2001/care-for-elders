@@ -1,12 +1,17 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import '../constants/app_constants.dart';
 import '../models/User.dart';
 import '../utils/logger.dart';
+import 'firestore_service.dart';
 
 class AuthService {
   static final AuthService _instance = AuthService._internal();
   factory AuthService() => _instance;
   AuthService._internal();
+
+  final firebase_auth.FirebaseAuth _firebaseAuth = firebase_auth.FirebaseAuth.instance;
+  final FirestoreService _firestoreService = FirestoreService();
 
   User? _currentUser;
 
@@ -14,39 +19,29 @@ class AuthService {
 
   bool get isLoggedIn => _currentUser != null;
 
+  // Get Firebase User
+  firebase_auth.User? get firebaseUser => _firebaseAuth.currentUser;
+
   // Initialize and check if user is logged in
   Future<bool> initialize() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final isLoggedIn = prefs.getBool(AppConstants.keyIsLoggedIn) ?? false;
+      final firebaseUser = _firebaseAuth.currentUser;
 
-      if (isLoggedIn) {
-        final userId = prefs.getString(AppConstants.keyUserId);
-        final userName = prefs.getString(AppConstants.keyUserName);
-        final userEmail = prefs.getString(AppConstants.keyUserEmail);
+      if (firebaseUser != null) {
+        // User is logged in, fetch user data from Firestore
+        final userDoc = await _firestoreService.getUser(firebaseUser.uid);
 
-        if (userId != null && userName != null && userEmail != null) {
-          // Restore user session (simplified version)
-          _currentUser = User(
-            userId: userId,
-            name: userName,
-            email: userEmail,
-            password: '', // Don't store passwords in SharedPreferences
-            phoneNumber: '',
-            dateOfBirth: DateTime.now(),
-            address: '',
-            emergencyContacts: [],
-            bloodType: '',
-            allergies: [],
-            role: 'Elder',
-          );
+        if (userDoc.exists) {
+          final userData = userDoc.data() as Map<String, dynamic>;
+          _currentUser = User.fromMap(userData);
           AppLogger.info('User session restored: ${_currentUser!.name}');
           return true;
         }
       }
+
       return false;
     } catch (e) {
-      AppLogger.info('Error initializing auth service: $e');
+      AppLogger.error('Error initializing auth service: $e');
       return false;
     }
   }
@@ -54,36 +49,34 @@ class AuthService {
   // Login
   Future<bool> login(String email, String password) async {
     try {
-      // TODO: Replace with actual API call
-      // For now, using dummy authentication
-      if (email.isNotEmpty && password.length >= 4) {
-        _currentUser = User(
-          userId: 'u1',
-          name: 'John Doe',
-          email: email,
-          password: password,
-          phoneNumber: '+1234567890',
-          dateOfBirth: DateTime(1950, 1, 1),
-          address: '123 Main Street',
-          emergencyContacts: ['Alice', 'Bob'],
-          bloodType: 'O+',
-          allergies: ['Penicillin'],
-          role: 'Elder',
-        );
+      // Sign in with Firebase
+      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-        // Save to SharedPreferences
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool(AppConstants.keyIsLoggedIn, true);
-        await prefs.setString(AppConstants.keyUserId, _currentUser!.userId);
-        await prefs.setString(AppConstants.keyUserName, _currentUser!.name);
-        await prefs.setString(AppConstants.keyUserEmail, _currentUser!.email);
+      if (userCredential.user != null) {
+        // Fetch user data from Firestore
+        final userDoc = await _firestoreService.getUser(userCredential.user!.uid);
 
-        AppLogger.info('User logged in: ${_currentUser!.name}');
-        return true;
+        if (userDoc.exists) {
+          final userData = userDoc.data() as Map<String, dynamic>;
+          _currentUser = User.fromMap(userData);
+
+          // Save to SharedPreferences
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool(AppConstants.keyIsLoggedIn, true);
+          await prefs.setString(AppConstants.keyUserId, _currentUser!.userId);
+          await prefs.setString(AppConstants.keyUserName, _currentUser!.name);
+          await prefs.setString(AppConstants.keyUserEmail, _currentUser!.email);
+
+          AppLogger.info('User logged in: ${_currentUser!.name}');
+          return true;
+        }
       }
       return false;
     } catch (e) {
-      AppLogger.info('Login error: $e');
+      AppLogger.error('Login error: $e');
       return false;
     }
   }
@@ -97,32 +90,47 @@ class AuthService {
     required DateTime dateOfBirth,
   }) async {
     try {
-      // TODO: Replace with actual API call
-      _currentUser = User(
-        userId: 'u_${DateTime.now().millisecondsSinceEpoch}',
-        name: name,
+      // Create Firebase user
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
-        phoneNumber: phoneNumber,
-        dateOfBirth: dateOfBirth,
-        address: '',
-        emergencyContacts: [],
-        bloodType: '',
-        allergies: [],
-        role: 'Elder',
       );
 
-      // Save to SharedPreferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool(AppConstants.keyIsLoggedIn, true);
-      await prefs.setString(AppConstants.keyUserId, _currentUser!.userId);
-      await prefs.setString(AppConstants.keyUserName, _currentUser!.name);
-      await prefs.setString(AppConstants.keyUserEmail, _currentUser!.email);
+      if (userCredential.user != null) {
+        // Create user object
+        _currentUser = User(
+          userId: userCredential.user!.uid,
+          name: name,
+          email: email,
+          password: '', // Don't store password
+          phoneNumber: phoneNumber,
+          dateOfBirth: dateOfBirth,
+          address: '',
+          emergencyContacts: [],
+          bloodType: '',
+          allergies: [],
+          role: 'Elder',
+        );
 
-      AppLogger.info('User registered: ${_currentUser!.name}');
-      return true;
+        // Save user data to Firestore
+        await _firestoreService.createUser(
+          _currentUser!.userId,
+          _currentUser!.toMap(),
+        );
+
+        // Save to SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool(AppConstants.keyIsLoggedIn, true);
+        await prefs.setString(AppConstants.keyUserId, _currentUser!.userId);
+        await prefs.setString(AppConstants.keyUserName, _currentUser!.name);
+        await prefs.setString(AppConstants.keyUserEmail, _currentUser!.email);
+
+        AppLogger.info('User registered: ${_currentUser!.name}');
+        return true;
+      }
+      return false;
     } catch (e) {
-      AppLogger.info('Registration error: $e');
+      AppLogger.error('Registration error: $e');
       return false;
     }
   }
@@ -130,12 +138,13 @@ class AuthService {
   // Logout
   Future<void> logout() async {
     try {
+      await _firebaseAuth.signOut();
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
       _currentUser = null;
       AppLogger.info('User logged out');
     } catch (e) {
-      AppLogger.info('Logout error: $e');
+      AppLogger.error('Logout error: $e');
     }
   }
 
@@ -149,10 +158,29 @@ class AuthService {
     if (_currentUser == null) return false;
 
     try {
-      if (name != null) _currentUser!.name = name;
-      if (email != null) _currentUser!.email = email;
-      if (phoneNumber != null) _currentUser!.phoneNumber = phoneNumber;
-      if (address != null) _currentUser!.address = address;
+      final updates = <String, dynamic>{};
+
+      if (name != null) {
+        _currentUser!.name = name;
+        updates['name'] = name;
+      }
+      if (email != null) {
+        _currentUser!.email = email;
+        updates['email'] = email;
+      }
+      if (phoneNumber != null) {
+        _currentUser!.phoneNumber = phoneNumber;
+        updates['phoneNumber'] = phoneNumber;
+      }
+      if (address != null) {
+        _currentUser!.address = address;
+        updates['address'] = address;
+      }
+
+      // Update Firestore
+      if (updates.isNotEmpty) {
+        await _firestoreService.updateUser(_currentUser!.userId, updates);
+      }
 
       // Update SharedPreferences
       final prefs = await SharedPreferences.getInstance();
@@ -162,7 +190,19 @@ class AuthService {
       AppLogger.info('Profile updated');
       return true;
     } catch (e) {
-      AppLogger.info('Profile update error: $e');
+      AppLogger.error('Profile update error: $e');
+      return false;
+    }
+  }
+
+  // Reset Password
+  Future<bool> resetPassword(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      AppLogger.info('Password reset email sent to: $email');
+      return true;
+    } catch (e) {
+      AppLogger.error('Password reset error: $e');
       return false;
     }
   }

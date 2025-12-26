@@ -5,11 +5,26 @@ import 'constants/app_constants.dart';
 import 'providers/auth_provider.dart';
 import 'screens/auth/splash_screen.dart';
 import 'utils/logger.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
-  // Initialize logger
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize logger first
   AppLogger.setupLogger();
   AppLogger.info('🚀 Starting Care for Elders App...');
+
+  try {
+    // Initialize Firebase
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    AppLogger.info('✅ Firebase initialized successfully');
+  } catch (e) {
+    AppLogger.error('❌ Firebase initialization failed: $e');
+    // Continue anyway - app can work without Firebase for now
+  }
 
   runApp(const MyApp());
 }

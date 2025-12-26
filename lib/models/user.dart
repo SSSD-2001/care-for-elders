@@ -74,7 +74,7 @@ class User {
     'email': email,
     'password': password,
     'phoneNumber': phoneNumber,
-    'dateOfBirth': dateOfBirth,
+    'dateOfBirth': dateOfBirth.toIso8601String(),
     'address': address,
     'emergencyContacts': emergencyContacts,
     'bloodType': bloodType,
@@ -82,18 +82,26 @@ class User {
     'role': role,
   };
 
+  // Alias for Firestore
+  Map<String, dynamic> toMap() => toJson();
+
   // Convert Map back to object
   factory User.fromJson(Map<String, dynamic> json) => User(
     userId: json['userId'],
     name: json['name'],
     email: json['email'],
-    password: json['password'],
+    password: json['password'] ?? '',
     phoneNumber: json['phoneNumber'],
-    dateOfBirth: json['dateOfBirth'],
+    dateOfBirth: json['dateOfBirth'] is String
+        ? DateTime.parse(json['dateOfBirth'])
+        : json['dateOfBirth'],
     address: json['address'],
     emergencyContacts: List<String>.from(json['emergencyContacts'] ?? []),
     bloodType: json['bloodType'],
     allergies: List<String>.from(json['allergies'] ?? []),
     role: json['role'],
   );
+
+  // Alias for Firestore
+  factory User.fromMap(Map<String, dynamic> map) => User.fromJson(map);
 }
