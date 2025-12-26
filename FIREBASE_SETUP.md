@@ -1,5 +1,19 @@
 # Firebase Backend Setup Guide
 
+## 🚨 SECURITY ALERT - PLEASE READ FIRST
+
+**⚠️ IMPORTANT**: This repository experienced a security incident where Firebase API keys were exposed.
+
+**Before continuing with this guide:**
+1. ✅ Read `URGENT_ACTION_REQUIRED.md` if you haven't rotated keys yet
+2. ✅ Read `FIREBASE_SECURE_SETUP.md` for the secure setup process
+3. ✅ Ensure you understand that Firebase config files are now gitignored
+
+**Firebase configuration files are NO LONGER committed to this repository for security.**
+You must generate them locally using FlutterFire CLI.
+
+---
+
 ## Overview
 Your "Care for Elders" app is now connected to Firebase! This guide explains what has been set up and how to configure Firebase console.
 
