@@ -156,12 +156,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       return ElevatedButton(
                         onPressed: authProvider.isLoading ? null : _handleLogin,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
+                          backgroundColor: AppThemeColors.primary,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: AppStyles.buttonBorderRadius,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.md,
                           ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: AppRadius.xlRadius,
+                          ),
+                          elevation: 0,
                         ),
                         child: authProvider.isLoading
                             ? const SizedBox(
@@ -178,13 +181,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'Login',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                       );
                     },
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
 
                   // Register Link
                   Row(
@@ -192,7 +195,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Text(
                         "Don't have an account? ",
-                        style: AppStyles.bodyText2,
+                        style: TextStyle(
+                          color: AppThemeColors.textSecondary,
+                        ),
                       ),
                       TextButton(
                         onPressed: () {
@@ -202,11 +207,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           );
                         },
-                        child: Text(
+                        child: const Text(
                           'Register',
                           style: TextStyle(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.bold,
+                            color: AppThemeColors.primary,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),

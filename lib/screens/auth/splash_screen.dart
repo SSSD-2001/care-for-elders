@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../constants/app_constants.dart';
+import '../../theme/app_theme.dart';
 import 'login_screen.dart';
 import '../home/home_screen.dart';
 
@@ -12,11 +13,33 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
+    );
+    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
+    );
+    _animationController.forward();
     _initialize();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   Future<void> _initialize() async {
@@ -43,39 +66,85 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // App Icon
-            Icon(
-              Icons.favorite_rounded,
-              size: 100,
-              color: Colors.white,
+      backgroundColor: AppThemeColors.background,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppThemeColors.background,
+              AppThemeColors.surface,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) {
+              return FadeTransition(
+                opacity: _fadeAnimation,
+                child: ScaleTransition(
+                  scale: _scaleAnimation,
+                  child: child,
+                ),
+              );
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // App Icon with gradient background
+                Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    gradient: AppThemeColors.primaryGradient,
+                    borderRadius: AppRadius.xxlRadius,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppThemeColors.primary.withOpacity(0.4),
+                        blurRadius: 30,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.favorite_rounded,
+                    size: 60,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xl),
+                // App Name
+                Text(
+                  AppConstants.appName,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    color: AppThemeColors.textPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  'Caring for Your Loved Ones',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppThemeColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xxl),
+                // Loading Indicator
+                SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: CircularProgressIndicator(
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      AppThemeColors.primary,
+                    ),
+                    strokeWidth: 3,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 24),
-            // App Name
-            Text(
-              AppConstants.appName,
-              style: AppStyles.headline1.copyWith(
-                color: Colors.white,
-                fontSize: 28,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Caring for Your Loved Ones',
-              style: AppStyles.bodyText1.copyWith(
-                color: Colors.white.withOpacity(0.9),
-              ),
-            ),
-            const SizedBox(height: 40),
-            // Loading Indicator
-            CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../constants/app_constants.dart';
+import '../../theme/app_theme.dart';
 import 'dashboard_tab.dart';
 import '../appointments/appointments_tab.dart';
-import '../medications/medications_tab.dart';
+import '../medications/todays_pills_screen.dart';
 import '../health_tracking/health_tracking_tab.dart';
 import '../emergency/emergency_tab.dart';
 
@@ -20,46 +21,65 @@ class _HomeScreenState extends State<HomeScreen> {
     DashboardTab(),
     HealthTrackingTab(),
     AppointmentsTab(),
-    MedicationsTab(),
+    TodaysPillsScreen(),
     EmergencyTab(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppThemeColors.background,
       body: _tabs[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.textSecondary,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: AppThemeColors.surface,
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(20),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Health',
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          selectedItemColor: AppThemeColors.primary,
+          unselectedItemColor: AppThemeColors.textHint,
+          selectedLabelStyle: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Appointments',
+          unselectedLabelStyle: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.medication),
-            label: 'Medications',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.emergency),
-            label: 'Emergency',
-          ),
-        ],
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard_rounded),
+              label: 'Dashboard',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite_rounded),
+              label: 'Health',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_month_rounded),
+              label: 'Appointments',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.medication_rounded),
+              label: 'Pills',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.emergency_rounded),
+              label: 'Emergency',
+            ),
+          ],
+        ),
       ),
     );
   }
