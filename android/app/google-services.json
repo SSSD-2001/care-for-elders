@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "720504682308",
+    "project_id": "care-for-elders",
+    "storage_bucket": "care-for-elders.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:720504682308:android:06d78680334f6df3dec911",
+        "android_client_info": {
+          "package_name": "com.example.care_for_elders"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCY89zcNi_WiKDoE3E9gW7t05Ku3LT8_H8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

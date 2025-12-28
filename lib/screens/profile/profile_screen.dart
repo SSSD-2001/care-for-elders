@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/app_constants.dart';
+import '../../theme/app_theme.dart';
 import '../../providers/auth_provider.dart';
 import '../auth/login_screen.dart';
 
@@ -11,8 +12,15 @@ class ProfileScreen extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Logout'),
-        content: Text('Are you sure you want to logout?'),
+        backgroundColor: AppThemeColors.surface,
+        title: Text(
+          'Logout',
+          style: TextStyle(color: AppThemeColors.textPrimary),
+        ),
+        content: Text(
+          'Are you sure you want to logout?',
+          style: TextStyle(color: AppThemeColors.textSecondary),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -21,7 +29,7 @@ class ProfileScreen extends StatelessWidget {
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
+              backgroundColor: AppThemeColors.error,
               foregroundColor: Colors.white,
             ),
             child: Text('Logout'),
@@ -49,51 +57,77 @@ class ProfileScreen extends StatelessWidget {
     final user = authProvider.currentUser;
 
     return Scaffold(
+      backgroundColor: AppThemeColors.background,
       appBar: AppBar(
         title: Text('Profile'),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppThemeColors.background,
+        foregroundColor: AppThemeColors.textPrimary,
+        elevation: 0,
       ),
       body: ListView(
-        padding: const EdgeInsets.all(AppStyles.paddingMedium),
+        padding: const EdgeInsets.all(AppSpacing.md),
         children: [
           // Profile Header
           Center(
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: AppColors.primary.withOpacity(0.1),
-                  child: Icon(
-                    Icons.person,
-                    size: 60,
-                    color: AppColors.primary,
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppThemeColors.primary.withOpacity(0.3),
+                        AppThemeColors.primaryLight.withOpacity(0.2),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: AppThemeColors.primary,
+                      width: 2,
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.person_rounded,
+                    size: 50,
+                    color: AppThemeColors.primary,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
                 Text(
                   user?.name ?? 'User',
-                  style: AppStyles.headline2,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: AppThemeColors.textPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   user?.email ?? '',
-                  style: AppStyles.bodyText2,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppThemeColors.textSecondary,
+                  ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.sm),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
+                    color: AppThemeColors.primary.withOpacity(0.2),
+                    borderRadius: AppRadius.circularRadius,
+                    border: Border.all(
+                      color: AppThemeColors.primary.withOpacity(0.5),
+                      width: 1,
+                    ),
                   ),
                   child: Text(
                     user?.role ?? 'Elder',
-                    style: AppStyles.bodyText2.copyWith(
-                      color: AppColors.primary,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppThemeColors.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -101,66 +135,72 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: AppSpacing.xl),
 
           // Personal Information
           Text(
             'Personal Information',
-            style: AppStyles.headline3,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: AppThemeColors.textPrimary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: AppStyles.cardBorderRadius,
+          const SizedBox(height: AppSpacing.md),
+          Container(
+            decoration: BoxDecoration(
+              color: AppThemeColors.surface,
+              borderRadius: AppRadius.largeRadius,
             ),
             child: Column(
               children: [
                 _buildProfileItem(
-                  Icons.phone,
+                  Icons.phone_rounded,
                   'Phone',
                   user?.phoneNumber ?? 'Not set',
                 ),
-                Divider(height: 1),
+                Divider(height: 1, color: AppThemeColors.surfaceLight),
                 _buildProfileItem(
-                  Icons.location_on,
+                  Icons.location_on_rounded,
                   'Address',
                   user?.address ?? 'Not set',
                 ),
-                Divider(height: 1),
+                Divider(height: 1, color: AppThemeColors.surfaceLight),
                 _buildProfileItem(
-                  Icons.water_drop,
+                  Icons.water_drop_rounded,
                   'Blood Type',
                   user?.bloodType ?? 'Not set',
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.lg),
 
           // Medical Information
           Text(
             'Medical Information',
-            style: AppStyles.headline3,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: AppThemeColors.textPrimary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: AppStyles.cardBorderRadius,
+          const SizedBox(height: AppSpacing.md),
+          Container(
+            decoration: BoxDecoration(
+              color: AppThemeColors.surface,
+              borderRadius: AppRadius.largeRadius,
             ),
             child: Column(
               children: [
                 _buildProfileItem(
-                  Icons.medical_services,
+                  Icons.medical_services_rounded,
                   'Allergies',
                   user?.allergies.isNotEmpty == true
                       ? user!.allergies.join(', ')
                       : 'None',
                 ),
-                Divider(height: 1),
+                Divider(height: 1, color: AppThemeColors.surfaceLight),
                 _buildProfileItem(
-                  Icons.contact_emergency,
+                  Icons.contact_emergency_rounded,
                   'Emergency Contacts',
                   user?.emergencyContacts.isNotEmpty == true
                       ? '${user!.emergencyContacts.length} contacts'
@@ -169,70 +209,80 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.lg),
 
           // Settings
           Text(
             'Settings',
-            style: AppStyles.headline3,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: AppThemeColors.textPrimary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: AppStyles.cardBorderRadius,
+          const SizedBox(height: AppSpacing.md),
+          Container(
+            decoration: BoxDecoration(
+              color: AppThemeColors.surface,
+              borderRadius: AppRadius.largeRadius,
             ),
             child: Column(
               children: [
                 _buildSettingsItem(
                   context,
-                  Icons.edit,
+                  Icons.edit_rounded,
                   'Edit Profile',
                   () {
                     // TODO: Navigate to edit profile
                   },
                 ),
-                Divider(height: 1),
+                Divider(height: 1, color: AppThemeColors.surfaceLight),
                 _buildSettingsItem(
                   context,
-                  Icons.notifications,
+                  Icons.notifications_rounded,
                   'Notification Settings',
                   () {
                     // TODO: Navigate to notification settings
                   },
                 ),
-                Divider(height: 1),
+                Divider(height: 1, color: AppThemeColors.surfaceLight),
                 _buildSettingsItem(
                   context,
-                  Icons.security,
+                  Icons.security_rounded,
                   'Privacy & Security',
                   () {
                     // TODO: Navigate to privacy settings
                   },
                 ),
-                Divider(height: 1),
+                Divider(height: 1, color: AppThemeColors.surfaceLight),
                 _buildSettingsItem(
                   context,
-                  Icons.help,
+                  Icons.help_rounded,
                   'Help & Support',
                   () {
                     // TODO: Navigate to help
                   },
                 ),
-                Divider(height: 1),
+                Divider(height: 1, color: AppThemeColors.surfaceLight),
                 _buildSettingsItem(
                   context,
-                  Icons.info,
+                  Icons.info_rounded,
                   'About',
                   () {
                     showAboutDialog(
                       context: context,
                       applicationName: AppConstants.appName,
                       applicationVersion: AppConstants.appVersion,
-                      applicationIcon: Icon(
-                        Icons.favorite_rounded,
-                        color: AppColors.primary,
-                        size: 48,
+                      applicationIcon: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppThemeColors.primary.withOpacity(0.2),
+                          borderRadius: AppRadius.mediumRadius,
+                        ),
+                        child: const Icon(
+                          Icons.favorite_rounded,
+                          color: AppThemeColors.primary,
+                          size: 40,
+                        ),
                       ),
                     );
                   },
@@ -240,35 +290,35 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.lg),
 
           // Logout Button
           ElevatedButton(
             onPressed: () => _handleLogout(context),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
+              backgroundColor: AppThemeColors.error,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
               shape: RoundedRectangleBorder(
-                borderRadius: AppStyles.buttonBorderRadius,
+                borderRadius: AppRadius.xlRadius,
               ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.logout),
-                const SizedBox(width: 8),
+              children: const [
+                Icon(Icons.logout_rounded),
+                SizedBox(width: 8),
                 Text(
                   'Logout',
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.lg),
         ],
       ),
     );
@@ -276,14 +326,28 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildProfileItem(IconData icon, String label, String value) {
     return ListTile(
-      leading: Icon(icon, color: AppColors.primary),
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: AppThemeColors.primary.withOpacity(0.15),
+          borderRadius: AppRadius.smallRadius,
+        ),
+        child: Icon(icon, color: AppThemeColors.primary, size: 22),
+      ),
       title: Text(
         label,
-        style: AppStyles.bodyText2,
+        style: const TextStyle(
+          color: AppThemeColors.textSecondary,
+          fontSize: 12,
+        ),
       ),
       subtitle: Text(
         value,
-        style: AppStyles.bodyText1.copyWith(fontWeight: FontWeight.w600),
+        style: const TextStyle(
+          color: AppThemeColors.textPrimary,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
@@ -295,12 +359,25 @@ class ProfileScreen extends StatelessWidget {
     VoidCallback onTap,
   ) {
     return ListTile(
-      leading: Icon(icon, color: AppColors.primary),
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: AppThemeColors.surfaceLight,
+          borderRadius: AppRadius.smallRadius,
+        ),
+        child: Icon(icon, color: AppThemeColors.textSecondary, size: 22),
+      ),
       title: Text(
         title,
-        style: AppStyles.bodyText1,
+        style: const TextStyle(
+          color: AppThemeColors.textPrimary,
+          fontSize: 14,
+        ),
       ),
-      trailing: Icon(Icons.chevron_right, color: AppColors.textHint),
+      trailing: const Icon(
+        Icons.chevron_right_rounded,
+        color: AppThemeColors.textHint,
+      ),
       onTap: onTap,
     );
   }
