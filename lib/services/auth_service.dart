@@ -25,23 +25,36 @@ class AuthService {
   // Initialize and check if user is logged in
   Future<bool> initialize() async {
     try {
+      print('🔄 AuthService: Starting initialization...');
+
       final firebaseUser = _firebaseAuth.currentUser;
+      print('🔍 AuthService: Firebase user: ${firebaseUser?.uid ?? "null"}');
 
       if (firebaseUser != null) {
+        print('🔄 AuthService: Fetching user data from Firestore...');
         // User is logged in, fetch user data from Firestore
-        final userDoc = await _firestoreService.getUser(firebaseUser.uid);
+        final userDoc = await _firestoreService.getUser(firebaseUser.uid).timeout(
+          const Duration(seconds: 3),
+          onTimeout: () {
+            print('⚠️ AuthService: Firestore timeout');
+            throw Exception('Firestore timeout');
+          },
+        );
 
         if (userDoc.exists) {
           final userData = userDoc.data() as Map<String, dynamic>;
           _currentUser = User.fromMap(userData);
           AppLogger.info('User session restored: ${_currentUser!.name}');
+          print('✅ AuthService: User session restored');
           return true;
         }
       }
 
+      print('✅ AuthService: No user logged in');
       return false;
     } catch (e) {
       AppLogger.error('Error initializing auth service: $e');
+      print('❌ AuthService: Error - $e');
       return false;
     }
   }

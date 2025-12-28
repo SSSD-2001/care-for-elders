@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'constants/app_constants.dart';
 import 'theme/app_theme.dart';
 import 'providers/auth_provider.dart';
@@ -26,15 +25,25 @@ void main() async {
   // Initialize logger first
   AppLogger.setupLogger();
   AppLogger.info('🚀 Starting Care for Elders App...');
+  print('🚀 Starting Care for Elders App...');
 
   try {
-    // Initialize Firebase
+    print('🔄 Initializing Firebase...');
+    // Initialize Firebase with timeout
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
+    ).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        print('⚠️ Firebase initialization timeout');
+        throw Exception('Firebase initialization timeout');
+      },
     );
     AppLogger.info('✅ Firebase initialized successfully');
+    print('✅ Firebase initialized successfully');
   } catch (e) {
     AppLogger.error('❌ Firebase initialization failed: $e');
+    print('❌ Firebase initialization failed: $e');
     // Continue anyway - app can work without Firebase for now
   }
 

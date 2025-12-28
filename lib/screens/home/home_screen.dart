@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../constants/app_constants.dart';
 import '../../theme/app_theme.dart';
 import 'dashboard_tab.dart';
 import '../appointments/appointments_tab.dart';

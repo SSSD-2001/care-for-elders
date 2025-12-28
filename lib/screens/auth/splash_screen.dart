@@ -43,20 +43,41 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _initialize() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    await authProvider.initialize();
+    try {
+      print('🔄 Splash: Starting initialization...');
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    // Wait for splash animation
-    await Future.delayed(const Duration(seconds: 2));
-
-    if (!mounted) return;
-
-    // Navigate based on login status
-    if (authProvider.isLoggedIn) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      // Add timeout to prevent infinite waiting
+      await authProvider.initialize().timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          print('⚠️ Splash: Initialization timeout, continuing anyway...');
+        },
       );
-    } else {
+
+      print('✅ Splash: Initialization complete. Is logged in: ${authProvider.isLoggedIn}');
+
+      // Wait for splash animation
+      await Future.delayed(const Duration(seconds: 2));
+
+      if (!mounted) return;
+
+      print('🚀 Splash: Navigating to next screen...');
+
+      // Navigate based on login status
+      if (authProvider.isLoggedIn) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+        );
+      }
+    } catch (e) {
+      print('❌ Splash: Error during initialization: $e');
+      // Navigate to login screen on error
+      if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const LoginScreen()),
       );

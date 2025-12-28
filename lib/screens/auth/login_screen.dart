@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../constants/app_constants.dart';
+import '../../theme/app_theme.dart';
 import 'register_screen.dart';
 import '../home/home_screen.dart';
 
@@ -159,10 +160,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           backgroundColor: AppThemeColors.primary,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(
-                            vertical: AppSpacing.md,
+                            vertical: 16,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: AppRadius.xlRadius,
+                            borderRadius: BorderRadius.circular(20),
                           ),
                           elevation: 0,
                         ),
@@ -187,13 +188,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                   ),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: 16),
 
                   // Register Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         "Don't have an account? ",
                         style: TextStyle(
                           color: AppThemeColors.textSecondary,
