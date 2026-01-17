@@ -1,6 +1,32 @@
-# Care for Elders - Healthcare App for Elderly Care
+# 🏥 Care for Elders - Healthcare App
 
-A comprehensive Flutter mobile application designed to help manage the healthcare needs of elderly individuals. The app includes features for medication reminders, appointment scheduling, health tracking, emergency contacts, and more.
+A comprehensive Flutter mobile application for managing elderly healthcare needs with Firebase backend integration.
+
+## 🚀 Quick Start
+
+**Run the app:**
+```bash
+# Android Emulator
+flutter run
+
+# Chrome (Web)
+flutter run -d chrome
+
+# iOS Simulator
+flutter run -d ios
+```
+
+## 📚 Documentation
+
+- **[🔐 FIREBASE_SECURE_SETUP.md](FIREBASE_SECURE_SETUP.md)** - ⚠️ **START HERE** - Secure Firebase setup (REQUIRED)
+- **[DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)** - Development instructions & adding features
+- **[FIREBASE_SETUP.md](FIREBASE_SETUP.md)** - Firebase configuration guide
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common issues & solutions
+- **[SCREEN_GUIDE.md](SCREEN_GUIDE.md)** - All screens and features overview
+- **[SECURITY_ALERT_REMEDIATION.md](SECURITY_ALERT_REMEDIATION.md)** - Security incident response (if needed)
+
+> **🔒 SECURITY NOTICE**: Firebase configuration files are NOT included in this repository. 
+> You must generate your own configuration files. See `FIREBASE_SECURE_SETUP.md` for instructions.
 
 ## 📱 Features Implemented
 

@@ -18,7 +18,12 @@ class AuthProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    await _authService.initialize();
+    try {
+      await _authService.initialize();
+    } catch (e) {
+      print('AuthProvider initialization error: $e');
+      // Continue anyway
+    }
 
     _isLoading = false;
     notifyListeners();
